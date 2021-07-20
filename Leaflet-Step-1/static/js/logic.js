@@ -21,27 +21,37 @@
     // Create a GeoJSON layer containing the features array on the earthquakeData object
     // Run the onEachFeature function once for each piece of data in the array
     var earthquakes = L.geoJSON(earthquakeData, {
-      onEachFeature: onEachFeature
+    //   onEachFeature: onEachFeature
        
 
 
-    //   pointToLayer: function (feature, latlng) {
+      pointToLayer: function (feature, latlng) {
         
-    //     // var color;
-    //     // var r = 255;
-    //     // var g = Math.floor(255-80*feature.properties.mag);
-    //     // var b = Math.floor(255-80*feature.properties.mag);
-    //     // color= "rgb("+r+" ,"+g+","+ b+")"
+        var color;
+        var r = 255;
+        var g = Math.floor(255-80*feature.properties.mag);
+        var b = Math.floor(255-80*feature.properties.mag);
+        color= "rgb("+r+" ,"+g+","+ b+")"
         
-    //     // var geojsonMarkerOptions = {
-    //     //   radius: 4*feature.properties.mag,
-    //     //   fillColor: color,
-    //     //   color: "black",
-    //     //   weight: 1,
-    //     //   opacity: 1,
-    //     //   fillOpacity: 0.8
-    //     // };
-    //     return L.circleMarker(latlng, geojsonMarkerOptions);}  
+        var geojsonMarkerOptions = {
+          radius: 4*feature.properties.mag,
+          fillColor: color,
+          color: "black",
+          weight: 1,
+          opacity: 1,
+          fillOpacity: 0.8
+        };
+        return L.circleMarker(latlng, geojsonMarkerOptions);},
+        onEachFeature: function(feature, layer) {
+            layer.bindPopup(
+              "Magnitude: "
+                + feature.properties.mag
+                + "<br>Depth: "
+                + feature.geometry.coordinates[2]
+                + "<br>Location: "
+                + feature.properties.place
+            );
+          }
       
     });
     
@@ -88,7 +98,7 @@
       ],
       zoom: 5,
       layers: [streetmap, earthquakes]
-    });
+    });s
   
     // Create a layer control
     // Pass in our baseMaps and overlayMaps
@@ -96,6 +106,27 @@
     L.control.layers(baseMaps, overlayMaps, {
       collapsed: false
     }).addTo(myMap);
+
+    var legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function (map) {
+
+    var div = L.DomUtil.create('div', 'info legend'),
+        grades = [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        colors = []
+        labels = [];
+
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + colors[i] + '"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    }
+
+    return div;
+};
+
+legend.addTo(myMap);
   }
   
 
