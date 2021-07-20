@@ -22,14 +22,11 @@
     // Run the onEachFeature function once for each piece of data in the array
     var earthquakes = L.geoJSON(earthquakeData, {
       
-       
-
-
       pointToLayer: function (feature, latlng) {
         var color;
         var r = 255;
         var g = Math.floor(255-70*feature.properties.mag);
-        var b = Math.floor(255-70*feature.properties.mag);
+        var b = Math.floor(255-60*feature.properties.mag);
         color= "rgb("+r+" ,"+g+","+ b+")"
         
         var geojsonMarkerOptions = {
@@ -44,8 +41,6 @@
       },
 
       onEachFeature: onEachFeature
-        
-      
     });
     
     // Sending our earthquakes layer to the createMap function
@@ -107,19 +102,20 @@
 
     var div = L.DomUtil.create('div', 'info legend'),
         grades = [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        colors = ['#FFDDDD', '#FFC3C3', '#FFB5B5', '#FF5353', '#FF0000', '#EE0000', '#C60000', '#A40000', '#BA0000'],
         labels = [];
 
     // loop through our density intervals and generate a label with a colored square for each interval
     for (var i = 0; i < grades.length; i++) {
         div.innerHTML +=
-            '<i style="background:' + (grades[i] + 1) + '"></i> ' +
+            '<i style="background:' + (colors[i]) + '"></i> ' +
             grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
     }
 
     return div;
 };
 
-legend.addTo(map);
+legend.addTo(myMap);
 
   }
   
