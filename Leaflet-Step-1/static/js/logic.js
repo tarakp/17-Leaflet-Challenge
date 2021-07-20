@@ -12,16 +12,16 @@
     // Define a function we want to run once for each feature in the features array
     // Give each feature a popup describing the place and time of the earthquake
     function onEachFeature(feature, layer) {
-      layer.bindPopup("<h3>" + feature.properties.place +
+      layer.bindPopup("<h3> Location: " + feature.properties.place +
       "</h3><hr><p>" + "Magnitude: " + (feature.properties.mag) + "</p>" +
-        "</h3><hr><p>" + new Date(feature.properties.time) + "</p>" 
+        "</h3><p> Depth: " + feature.geometry.coordinates[2] + "</p>" 
          );
     }
   
     // Create a GeoJSON layer containing the features array on the earthquakeData object
     // Run the onEachFeature function once for each piece of data in the array
     var earthquakes = L.geoJSON(earthquakeData, {
-    //   onEachFeature: onEachFeature
+      
        
 
 
@@ -40,19 +40,11 @@
           opacity: 1,
           fillOpacity: 0.8
         };
-        return L.circleMarker(latlng, geojsonMarkerOptions);},
-        onEachFeature: function(feature, layer) {
-            layer.bindPopup(
-               
-              "Magnitude: "
-                + feature.properties.mag
-                + "<br><hr>Depth: "
-                + feature.geometry.coordinates[2]
-                + "<br>Location: "
-                + feature.properties.place 
-                
-            );
-          }
+        return L.circleMarker(latlng, geojsonMarkerOptions);
+      },
+
+      onEachFeature: onEachFeature
+        
       
     });
     
@@ -99,7 +91,7 @@
       ],
       zoom: 5,
       layers: [streetmap, earthquakes]
-    });s
+    });
   
     // Create a layer control
     // Pass in our baseMaps and overlayMaps
