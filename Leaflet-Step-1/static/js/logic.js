@@ -26,11 +26,10 @@
 
 
       pointToLayer: function (feature, latlng) {
-        
         var color;
         var r = 255;
-        var g = Math.floor(255-80*feature.properties.mag);
-        var b = Math.floor(255-80*feature.properties.mag);
+        var g = Math.floor(255-70*feature.properties.mag);
+        var b = Math.floor(255-70*feature.properties.mag);
         color= "rgb("+r+" ,"+g+","+ b+")"
         
         var geojsonMarkerOptions = {
@@ -44,12 +43,14 @@
         return L.circleMarker(latlng, geojsonMarkerOptions);},
         onEachFeature: function(feature, layer) {
             layer.bindPopup(
+               
               "Magnitude: "
                 + feature.properties.mag
-                + "<br>Depth: "
+                + "<br><hr>Depth: "
                 + feature.geometry.coordinates[2]
                 + "<br>Location: "
-                + feature.properties.place
+                + feature.properties.place 
+                
             );
           }
       
@@ -107,26 +108,27 @@
       collapsed: false
     }).addTo(myMap);
 
+    
     var legend = L.control({position: 'bottomright'});
 
-legend.onAdd = function (map) {
+    legend.onAdd = function (map) {
 
     var div = L.DomUtil.create('div', 'info legend'),
         grades = [0, 1, 2, 3, 4, 5, 6, 7, 8],
-        colors = []
         labels = [];
 
     // loop through our density intervals and generate a label with a colored square for each interval
     for (var i = 0; i < grades.length; i++) {
         div.innerHTML +=
-            '<i style="background:' + colors[i] + '"></i> ' +
+            '<i style="background:' + (grades[i] + 1) + '"></i> ' +
             grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
     }
 
     return div;
 };
 
-legend.addTo(myMap);
+legend.addTo(map);
+
   }
   
 
